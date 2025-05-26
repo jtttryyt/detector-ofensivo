@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Detector de Lenguaje Ofensivo</title>
     <style>
         body {
@@ -39,6 +40,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin: 5px;
         }
 
         button:hover {
@@ -61,23 +63,85 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+
+        mark {
+            background-color: rgb(252, 3, 3);
+            font-weight: bold;
+        }
+
+        .texto-resaltado {
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            text-align: left;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        p {
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .palabras-lista {
+            text-align: left;
+            margin-top: 10px;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .palabras-lista li {
+            background-color: #e9ecef;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 4px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Detector de Lenguaje Ofensivo</h1>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="archivo" required>
-            <br>
+        <form method="POST" enctype="multipart/form-data" id="form-archivo">
+            <input type="file" name="archivo" required />
+            <br />
             <button type="submit">Analizar Archivo</button>
+            <button type="button" onclick="window.location.href=window.location.pathname;">Recargar</button>
         </form>
 
         {% if mensaje %}
-            <div class="mensaje {% if '✅' in mensaje %}ok{% else %}error{% endif %}">
-                {{ mensaje|safe }}
-            </div>
+        <div class="mensaje {% if '✅' in mensaje %}ok{% else %}error{% endif %}">
+            {{ mensaje|safe }}
+        </div>
+        {% endif %}
+
+        {% if estado %}
+        <p>Estado del procesamiento: {{ estado }}</p>
+        {% endif %}
+
+        {% if tiempo %}
+        <p>Tiempo de procesamiento: {{ tiempo }} segundos</p>
+        {% endif %}
+
+        {% if palabras_detectadas %}
+        <h3>Palabras ofensivas detectadas:</h3>
+        <ul class="palabras-lista">
+            {% for palabra in palabras_detectadas %}
+            <li>{{ palabra }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if texto %}
+        <h3>Vista previa del texto con palabras ofensivas resaltadas:</h3>
+        <div class="texto-resaltado">
+            {{ texto | safe }}
+        </div>
         {% endif %}
     </div>
 </body>
-</html>
 
+</html>
